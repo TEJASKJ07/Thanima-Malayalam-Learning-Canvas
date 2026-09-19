@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanima - Malayalam Learning Canvas</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gayathri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        },
+                        duo: {
+                            green: '#58cc02',
+                            greenDark: '#46a302',
+                            blue: '#1cb0f6',
+                            blueDark: '#1899d6',
+                            yellow: '#ffc800',
+                            yellowDark: '#e5b200',
+                            orange: '#ff9600',
+                            red: '#ff4b4b',
+                            purple: '#ce82ff',
+                        }
+                    },
+                    fontFamily: {
+                        malayalam: ['Gayathri', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="app-bg app-text min-h-screen flex flex-col font-sans transition-colors duration-200">
+
+    <!-- Navigation Bar -->
+    <header class="border-b-2 border-slate-200 dark:border-slate-800 bg-header sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="app.navigateTo('practice')">
+                <div
+                    class="w-10 h-10 rounded-2xl bg-accent flex items-center justify-center text-on-accent font-black text-2xl shadow-md">
+                    അ
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight text-heading leading-none">
+                        Thanima<span class="text-accent-green"></span>
+                    </h1>
+                    <p class="text-xs text-muted font-semibold uppercase tracking-wider">Malayalam Learning Canvas
+                    </p>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center space-x-4">
+                <!-- Theme Toggle Button -->
+                <button onclick="app.toggleTheme()" class="p-2.5 rounded-xl bg-btn-gray text-subtle transition"
+                    title="Toggle Light/Dark Theme">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline text-warn"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-header border-b border-slate-200 dark:border-slate-800 px-4">
+        <div class="max-w-6xl mx-auto flex space-x-2">
+            <button id="tab-practice" onclick="app.navigateTo('practice')"
+                class="py-3 px-5 border-b-4 border-duo-green text-accent-green font-extrabold flex items-center space-x-2 transition">
+                <i class="fa-solid fa-pen-nib"></i>
+                <span>Practice Canvas</span>
+            </button>
+            <button id="tab-library" onclick="app.navigateTo('library')"
+                class="py-3 px-5 border-b-4 border-transparent text-tab-inactive font-extrabold flex items-center space-x-2 transition">
+                <i class="fa-solid fa-book-open"></i>
+                <span>Letter Library</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6">
+
+        <!-- ==================== PRACTICE VIEW ==================== -->
+        <section id="view-practice" class="space-y-6">
+            <!-- Progress Bar Header -->
+            <div
+                class="bg-surface p-4 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="w-full md:w-2/3">
+                    <div class="flex justify-between items-center mb-1 text-sm font-bold text-subtle">
+                        <span id="curriculum-category-label">Vowels (സ്വരാക്ഷരങ്ങൾ)</span>
+                        <span id="curriculum-progress-text">1 / 5</span>
+                    </div>
+                    <div class="w-full bg-progress-track h-3.5 rounded-full overflow-hidden">
+                        <div id="curriculum-progress-bar"
+                            class="bg-accent h-full rounded-full transition-all duration-300" style="width: 20%;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Switcher Dropdown -->
+                <div class="w-full md:w-auto flex items-center space-x-2">
+                    <label for="category-select"
+                        class="text-xs font-bold text-muted uppercase tracking-wider whitespace-nowrap">Category:</label>
+                    <select id="category-select" onchange="app.selectCategory(this.value)"
+                        class="w-full md:w-48 bg-select border border-slate-300 dark:border-slate-700 text-select text-sm font-bold rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-duo-green">
+                        <option value="vowels">Vowels (സ്വരാക്ഷരങ്ങൾ)</option>
+                        <option value="consonants">Consonants (വ്യഞ്ജനാക്ഷരങ്ങൾ)</option>
+                        <option value="chillus">Chillu Letters (ചില്ലക്ഷരങ്ങൾ)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Workspace Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 items-start">
+
+                <!-- Reference Card (Left Column / Top on Mobile) -->
+                <div
+                    class="lg:col-span-4 bg-surface rounded-3xl p-4 md:p-6 border-2 border-slate-200 dark:border-slate-700 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
+
+                    <!-- Sound / Pronunciation Button -->
+                    <button onclick="app.playAudio()"
+                        class="absolute top-4 right-4 w-11 h-11 rounded-2xl bg-audio text-accent-blue hover:scale-105 active:scale-95 flex items-center justify-center text-lg transition shadow-sm border border-sky-200 dark:border-sky-800"
+                        title="Listen Pronunciation">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </button>
+
+                    <!-- Category Badge -->
+                    <span id="card-type-badge"
+                        class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-badge-vowel text-badge-vowel mb-2">
+                        Vowel
+                    </span>
+
+                    <!-- Target Malayalam Character Display -->
+                    <div id="card-malayalam-char"
+                        class="font-malayalam text-7xl md:text-9xl font-bold text-heading my-1 select-none">
+                        അ
+                    </div>
+
+                    <!-- Transliteration / Sound -->
+                    <div class="space-y-0.5 mb-4">
+                        <div id="card-roman-sound"
+                            class="text-2xl md:text-3xl font-extrabold text-accent-blue tracking-wide">
+                            "a"
+                        </div>
+                        <p id="card-meaning-text"
+                            class="text-[10px] md:text-xs font-bold text-muted uppercase tracking-widest">
+                            Phonetic Sound
+                        </p>
+                    </div>
+
+                    <!-- Example Word Box -->
+                    <div
+                        class="w-full bg-surface-soft rounded-2xl p-3 border border-slate-200 dark:border-slate-700/60 text-left">
+                        <span class="text-[10px] font-bold text-muted uppercase tracking-wider block mb-0.5">Example
+                            Word</span>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span id="card-example-malayalam"
+                                    class="font-malayalam text-xl md:text-2xl font-bold text-body">അമ്മ</span>
+                                <span id="card-example-translit"
+                                    class="text-xs font-semibold text-muted2 block">(Amma)</span>
+                            </div>
+                            <span id="card-example-meaning"
+                                class="text-xs font-bold text-subtle bg-surface px-2.5 py-1 rounded-xl border border-slate-200 dark:border-slate-700">
+                                Mother
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Navigation Arrows -->
+                    <div
+                        class="flex items-center justify-between w-full mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50">
+                        <button onclick="app.prevLetter()"
+                            class="btn-duo-gray px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold flex items-center space-x-1.5">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Prev</span>
+                        </button>
+                        <span id="letter-index-indicator" class="text-xs font-extrabold text-muted">1 of 5</span>
+                        <button onclick="app.nextLetter()"
+                            class="btn-duo-gray px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold flex items-center space-x-1.5">
+                            <span>Next</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive Drawing Area (Right Column) -->
+                <div
+                    class="lg:col-span-8 bg-surface rounded-3xl p-3 sm:p-6 border-2 border-slate-200 dark:border-slate-700 shadow-sm flex flex-col items-center w-full">
+
+                    <!-- Canvas Top Controls Header -->
+                    <div
+                        class="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-hand-sparkles text-accent-green"></i>
+                            <h2 class="text-base font-extrabold text-subtle2">
+                                Practice Canvas
+                            </h2>
+                        </div>
+
+                        <!-- Top Toolbar (Hint Removed) -->
+                        <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
+                            <button id="btn-toggle-underlay" onclick="app.toggleUnderlay()"
+                                class="px-3 py-1.5 rounded-xl bg-underlay-btn text-underlay border border-indigo-200 dark:border-indigo-800 text-xs font-extrabold transition flex items-center space-x-1">
+                                <i class="fa-solid fa-layer-group"></i>
+                                <span>Underlay</span>
+                            </button>
+                            <button onclick="app.clearCanvas()"
+                                class="px-3 py-1.5 rounded-xl bg-btn-gray2 text-subtle text-xs font-extrabold transition flex items-center space-x-1">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                <span>Clear</span>
+                            </button>
+                            <button onclick="app.nextLetter()"
+                                class="px-3.5 py-1.5 rounded-xl bg-accent text-on-accent text-xs font-extrabold transition flex items-center space-x-1 shadow-sm">
+                                <span>Next</span>
+                                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Container -->
+                    <div
+                        class="relative w-full aspect-square max-w-[500px] bg-canvas rounded-3xl border-4 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden shadow-inner touch-none">
+
+                        <!-- Typed Letter Underlay (Faint Tracing Guide) -->
+                        <div id="canvas-underlay"
+                            class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 hidden">
+                            <span id="underlay-char"
+                                class="font-malayalam text-[180px] sm:text-[230px] text-char-underlay font-bold select-none leading-none transform translate-y-[-8px]">
+                                അ
+                            </span>
+                        </div>
+
+                        <!-- User Drawing Canvas -->
+                        <canvas id="drawing-canvas" class="w-full h-full rounded-2xl z-10 relative touch-none"></canvas>
+
+                        <!-- Prompt Overlay -->
+                        <div id="canvas-prompt"
+                            class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center text-prompt select-none z-0 transition-opacity duration-300 p-4 text-center">
+                            <i class="fa-solid fa-pen-line text-4xl sm:text-5xl mb-2 animate-pulse"></i>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Bottom Action Toolbar -->
+                    <div class="w-full max-w-[500px] mt-4 flex items-center space-x-3">
+                        <button onclick="app.clearCanvas()"
+                            class="w-1/2 btn-duo-gray py-3 rounded-2xl font-extrabold text-xs sm:text-sm flex items-center justify-center space-x-1.5">
+                            <i class="fa-solid fa-trash-can"></i>
+                            <span>Reset Canvas</span>
+                        </button>
+                        <button onclick="app.nextLetter()"
+                            class="w-1/2 bg-accent text-on-accent py-3 rounded-2xl font-extrabold text-xs sm:text-sm flex items-center justify-center space-x-1.5 shadow-sm transition active:scale-95">
+                            <span>Next Letter</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== LETTER LIBRARY VIEW ==================== -->
+        <section id="view-library" class="hidden space-y-6">
+            <div class="bg-surface p-6 rounded-3xl border border-slate-200 dark:border-slate-700">
+                <h2 class="text-2xl font-extrabold text-heading mb-2">Malayalam Script Library</h2>
+                <p class="text-muted2 text-sm mb-6">Explore vowels, consonants, and chillu
+                    letters. Click any letter to start practicing.</p>
+
+                <!-- Filter Tabs -->
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <button onclick="app.filterLibrary('all', event)"
+                        class="lib-filter-btn px-4 py-2 rounded-xl bg-filter-active text-filter-active font-extrabold text-sm shadow">All
+                        Letters</button>
+                    <button onclick="app.filterLibrary('vowel', event)"
+                        class="lib-filter-btn px-4 py-2 rounded-xl bg-filter-inactive text-filter-inactive font-extrabold text-sm transition">Vowels
+                        (15)</button>
+                    <button onclick="app.filterLibrary('consonant', event)"
+                        class="lib-filter-btn px-4 py-2 rounded-xl bg-filter-inactive text-filter-inactive font-extrabold text-sm transition">Consonants
+                        (10)</button>
+                    <button onclick="app.filterLibrary('chillu', event)"
+                        class="lib-filter-btn px-4 py-2 rounded-xl bg-filter-inactive text-filter-inactive font-extrabold text-sm transition">Chillu
+                        Letters (5)</button>
+                </div>
+
+                <!-- Grid of Letters -->
+                <div id="library-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <!-- Injected dynamically -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

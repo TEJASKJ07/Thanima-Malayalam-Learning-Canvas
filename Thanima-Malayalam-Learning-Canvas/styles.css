@@ -1,0 +1,281 @@
+/* Responsive Canvas Container */
+.canvas-wrapper {
+    width: 100%;
+    max-width: 420px;
+    height: clamp(320px, 70vw, 420px);
+    position: relative;
+    touch-action: none;
+    /* Prevents touch scrolling while drawing on mobile */
+}
+
+/* Ensure drawing canvas stretches smoothly */
+#drawing-canvas {
+    touch-action: none;
+    cursor: crosshair;
+    width: 100%;
+    height: 100%;
+}
+
+/* Mobile Button Adjustments */
+@media (max-width: 640px) {
+    .canvas-control-btn {
+        padding: 0.5rem 0.625rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* =====================================================
+   COLOR SYSTEM
+   All background and text colors live here. Edit the
+   variables below to restyle the whole app; light values
+   are in :root, dark-mode overrides are in html.dark.
+   ===================================================== */
+:root {
+    --c-bg-page: #f8fafc;
+    --c-bg-header: #ffffff;
+    --c-bg-surface: #ffffff;
+    --c-bg-surface-soft: #f8fafc;
+    --c-bg-canvas: #f8fafc;
+    --c-bg-select: #f1f5f9;
+    --c-bg-grid-card: #f8fafc;
+    --c-bg-grid-card-hover: #ecfdf5;
+    --c-bg-btn-gray: #f1f5f9;
+    --c-bg-btn-gray-hover: #e2e8f0;
+    --c-bg-btn-gray2: #f1f5f9;
+    --c-bg-btn-gray2-hover: #e2e8f0;
+    --c-bg-accent: #58cc02;
+    --c-bg-accent-hover: #059669;
+    --c-bg-progress-track: #e2e8f0;
+    --c-bg-badge-vowel: #d1fae5;
+    --c-bg-audio: #e0f2fe;
+    --c-bg-underlay: #eef2ff;
+    --c-bg-underlay-active: #4f46e5;
+    --c-bg-filter-inactive: #f1f5f9;
+    --c-bg-filter-hover: #e2e8f0;
+
+    --c-text-body: #1e293b;
+    --c-text-heading: #1e293b;
+    --c-text-muted: #94a3b8;
+    --c-text-muted2: #64748b;
+    --c-text-subtle: #475569;
+    --c-text-subtle2: #334155;
+    --c-text-tab-inactive: #64748b;
+    --c-text-tab-inactive-hover: #1e293b;
+    --c-text-select: #1e293b;
+    --c-text-on-accent: #ffffff;
+    --c-text-accent-green: #58cc02;
+    --c-text-accent-blue: #1cb0f6;
+    --c-text-warn: #fbbf24;
+    --c-text-badge-vowel: #047857;
+    --c-text-underlay: #4f46e5;
+    --c-text-prompt: #cbd5e1;
+    --c-text-char-underlay: rgba(148, 163, 184, 0.25);
+    --c-text-filter-inactive: #475569;
+}
+
+html.dark {
+    --c-bg-page: #0f172a;
+    --c-bg-header: #0f172a;
+    --c-bg-surface: #1e293b;
+    --c-bg-surface-soft: rgba(15, 23, 42, 0.6);
+    --c-bg-canvas: #0f172a;
+    --c-bg-select: #0f172a;
+    --c-bg-grid-card: rgba(15, 23, 42, 0.8);
+    --c-bg-grid-card-hover: rgba(51, 65, 85, 0.6);
+    --c-bg-btn-gray: #1e293b;
+    --c-bg-btn-gray-hover: #334155;
+    --c-bg-btn-gray2: #334155;
+    --c-bg-btn-gray2-hover: #475569;
+    --c-bg-progress-track: #334155;
+    --c-bg-badge-vowel: rgba(6, 78, 59, 0.6);
+    --c-bg-audio: rgba(8, 47, 73, 0.6);
+    --c-bg-underlay: rgba(49, 46, 129, 0.4);
+    --c-bg-filter-inactive: #334155;
+
+    --c-text-body: #f1f5f9;
+    --c-text-heading: #ffffff;
+    --c-text-muted2: #94a3b8;
+    --c-text-subtle: #cbd5e1;
+    --c-text-subtle2: #e2e8f0;
+    --c-text-tab-inactive-hover: #e2e8f0;
+    --c-text-select: #e2e8f0;
+    --c-text-badge-vowel: #6ee7b7;
+    --c-text-underlay: #818cf8;
+    --c-text-prompt: #334155;
+    --c-text-char-underlay: rgba(100, 116, 139, 0.2);
+    --c-text-filter-inactive: #cbd5e1;
+}
+
+/* Backgrounds */
+.app-bg {
+    background-color: var(--c-bg-page);
+}
+
+.bg-header {
+    background-color: var(--c-bg-header);
+}
+
+.bg-surface {
+    background-color: var(--c-bg-surface);
+}
+
+.bg-surface-soft {
+    background-color: var(--c-bg-surface-soft);
+}
+
+.bg-canvas {
+    background-color: var(--c-bg-canvas);
+}
+
+.bg-select {
+    background-color: var(--c-bg-select);
+}
+
+.bg-grid-card {
+    background-color: var(--c-bg-grid-card);
+}
+
+.bg-grid-card:hover {
+    background-color: var(--c-bg-grid-card-hover);
+}
+
+.bg-btn-gray {
+    background-color: var(--c-bg-btn-gray);
+}
+
+.bg-btn-gray:hover {
+    background-color: var(--c-bg-btn-gray-hover);
+}
+
+.bg-btn-gray2 {
+    background-color: var(--c-bg-btn-gray2);
+}
+
+.bg-btn-gray2:hover {
+    background-color: var(--c-bg-btn-gray2-hover);
+}
+
+.bg-accent {
+    background-color: var(--c-bg-accent);
+}
+
+.bg-accent:hover {
+    background-color: var(--c-bg-accent-hover);
+}
+
+.bg-progress-track {
+    background-color: var(--c-bg-progress-track);
+}
+
+.bg-badge-vowel {
+    background-color: var(--c-bg-badge-vowel);
+}
+
+.bg-audio {
+    background-color: var(--c-bg-audio);
+}
+
+.bg-underlay-btn {
+    background-color: var(--c-bg-underlay);
+}
+
+.bg-underlay-btn.active {
+    background-color: var(--c-bg-underlay-active);
+}
+
+.bg-filter-inactive {
+    background-color: var(--c-bg-filter-inactive);
+}
+
+.bg-filter-inactive:hover {
+    background-color: var(--c-bg-filter-hover);
+}
+
+.bg-filter-active {
+    background-color: var(--c-bg-accent);
+}
+
+/* Text */
+.app-text {
+    color: var(--c-text-body);
+}
+
+.text-body {
+    color: var(--c-text-body);
+}
+
+.text-heading {
+    color: var(--c-text-heading);
+}
+
+.text-muted {
+    color: var(--c-text-muted);
+}
+
+.text-muted2 {
+    color: var(--c-text-muted2);
+}
+
+.text-subtle {
+    color: var(--c-text-subtle);
+}
+
+.text-subtle2 {
+    color: var(--c-text-subtle2);
+}
+
+.text-tab-inactive {
+    color: var(--c-text-tab-inactive);
+}
+
+.text-tab-inactive:hover {
+    color: var(--c-text-tab-inactive-hover);
+}
+
+.text-select {
+    color: var(--c-text-select);
+}
+
+.text-on-accent {
+    color: var(--c-text-on-accent);
+}
+
+.text-accent-green {
+    color: var(--c-text-accent-green);
+}
+
+.text-accent-blue {
+    color: var(--c-text-accent-blue);
+}
+
+.text-warn {
+    color: var(--c-text-warn);
+}
+
+.text-badge-vowel {
+    color: var(--c-text-badge-vowel);
+}
+
+.text-underlay {
+    color: var(--c-text-underlay);
+}
+
+.text-underlay.active {
+    color: var(--c-text-on-accent);
+}
+
+.text-prompt {
+    color: var(--c-text-prompt);
+}
+
+.text-char-underlay {
+    color: var(--c-text-char-underlay);
+}
+
+.text-filter-inactive {
+    color: var(--c-text-filter-inactive);
+}
+
+.text-filter-active {
+    color: var(--c-text-on-accent);
+}
