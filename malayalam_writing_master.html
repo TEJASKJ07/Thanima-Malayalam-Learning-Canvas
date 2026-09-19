@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Malayalam Writing Master - Learn to Write Malayalam</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Gayathri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        },
+                        duo: {
+                            green: '#58cc02',
+                            greenDark: '#46a302',
+                            blue: '#1cb0f6',
+                            blueDark: '#1899d6',
+                            yellow: '#ffc800',
+                            yellowDark: '#e5b200',
+                            orange: '#ff9600',
+                            red: '#ff4b4b',
+                            purple: '#ce82ff',
+                        }
+                    },
+                    fontFamily: {
+                        malayalam: ['Gayathri', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-shadow {
+            box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-duo-green {
+            background-color: #58cc02;
+            box-shadow: 0 4px 0 0 #46a302;
+            transition: all 0.1s ease;
+        }
+
+        .btn-duo-green:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 0 #46a302;
+        }
+
+        .btn-duo-blue {
+            background-color: #1cb0f6;
+            box-shadow: 0 4px 0 0 #1899d6;
+            transition: all 0.1s ease;
+        }
+
+        .btn-duo-blue:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 0 #1899d6;
+        }
+
+        .btn-duo-gray {
+            background-color: #e5e7eb;
+            box-shadow: 0 4px 0 0 #d1d5db;
+            color: #374151;
+            transition: all 0.1s ease;
+        }
+
+        .dark .btn-duo-gray {
+            background-color: #374151;
+            box-shadow: 0 4px 0 0 #1f2937;
+            color: #f3f4f6;
+        }
+
+        .btn-duo-gray:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 0 #d1d5db;
+        }
+
+        /* Prevent unwanted scrolling on mobile when drawing */
+        #drawing-canvas {
+            touch-action: none;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+
+    <!-- Navigation / Top Header Bar -->
+    <header class="border-b-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer" onclick="app.navigateTo('practice')">
+                <div
+                    class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-duo-green flex items-center justify-center text-white font-black text-xl sm:text-2xl shadow-md">
+                    അ
+                </div>
+                <div>
+                    <h1
+                        class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-800 dark:text-white leading-none">
+                        Malayalam<span class="text-duo-green">Master</span>
+                    </h1>
+                    <p class="text-[10px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">Handwriting
+                        Lab</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sub-Nav / Tabs -->
+    <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-2 sm:px-4">
+        <div class="max-w-6xl mx-auto flex space-x-1 sm:space-x-2">
+            <button id="tab-practice" onclick="app.navigateTo('practice')"
+                class="py-2.5 sm:py-3 px-3 sm:px-5 border-b-4 border-duo-green text-duo-green font-extrabold text-sm sm:text-base flex items-center space-x-2 transition">
+                <i class="fa-solid fa-pen-nib"></i>
+                <span>Practice Canvas</span>
+            </button>
+            <button id="tab-library" onclick="app.navigateTo('library')"
+                class="py-2.5 sm:py-3 px-3 sm:px-5 border-b-4 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-extrabold text-sm sm:text-base flex items-center space-x-2 transition">
+                <i class="fa-solid fa-book-open"></i>
+                <span>Letter Library</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-6xl w-full mx-auto p-3 sm:p-4 md:p-6">
+
+        <!-- ==================== PRACTICE VIEW ==================== -->
+        <section id="view-practice" class="space-y-4 sm:space-y-6">
+            <!-- Progress Bar Header -->
+            <div
+                class="bg-white dark:bg-slate-800 p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                <div class="w-full sm:w-2/3">
+                    <div
+                        class="flex justify-between items-center mb-1 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300">
+                        <span id="curriculum-category-label">Vowels (സ്വരാക്ഷരങ്ങൾ)</span>
+                        <span id="curriculum-progress-text">1 / 5</span>
+                    </div>
+                    <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 sm:h-3.5 rounded-full overflow-hidden">
+                        <div id="curriculum-progress-bar"
+                            class="bg-duo-green h-full rounded-full transition-all duration-300" style="width: 20%;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Switcher Dropdown -->
+                <div class="w-full sm:w-auto flex items-center space-x-2">
+                    <label for="category-select"
+                        class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">Category:</label>
+                    <select id="category-select" onchange="app.selectCategory(this.value)"
+                        class="w-full sm:w-48 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-bold rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-duo-green">
+                        <option value="vowels">Vowels (സ്വരാക്ഷരങ്ങൾ)</option>
+                        <option value="consonants">Consonants (വ്യഞ്ജനാക്ഷരങ്ങൾ)</option>
+                        <option value="chillus">Chillu Letters (ചില്ലക്ഷരങ്ങൾ)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Workspace Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+
+                <!-- Reference Card (Left Column) -->
+                <div
+                    class="lg:col-span-4 bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border-2 border-slate-200 dark:border-slate-700 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
+
+                    <!-- Sound / Pronunciation Button Top Corner -->
+                    <button onclick="app.playAudio()"
+                        class="absolute top-3 right-3 sm:top-4 sm:right-4 w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-sky-100 dark:bg-sky-950/60 text-duo-blue hover:scale-105 active:scale-95 flex items-center justify-center text-lg sm:text-xl transition shadow-sm border border-sky-200 dark:border-sky-800"
+                        title="Listen Pronunciation">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </button>
+
+                    <!-- Category Badge -->
+                    <span id="card-type-badge"
+                        class="px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 mb-2 sm:mb-4">
+                        Vowel
+                    </span>
+
+                    <!-- Target Malayalam Character Display -->
+                    <div id="card-malayalam-char"
+                        class="font-malayalam text-7xl sm:text-8xl md:text-9xl font-bold text-slate-800 dark:text-white my-1 sm:my-2 select-none">
+                        അ
+                    </div>
+
+                    <!-- Transliteration / Sound -->
+                    <div class="space-y-0.5 sm:space-y-1 mb-4 sm:mb-6">
+                        <div id="card-roman-sound"
+                            class="text-2xl sm:text-3xl font-extrabold text-duo-blue tracking-wide">
+                            "a"
+                        </div>
+                        <p id="card-meaning-text"
+                            class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">
+                            Phonetic Sound
+                        </p>
+                    </div>
+
+                    <!-- Example Word Box -->
+                    <div
+                        class="w-full bg-slate-50 dark:bg-slate-900/60 rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-700/60 text-left">
+                        <span
+                            class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Example
+                            Word</span>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span id="card-example-malayalam"
+                                    class="font-malayalam text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">അമ്മ</span>
+                                <span id="card-example-translit"
+                                    class="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 block">(Amma)</span>
+                            </div>
+                            <span id="card-example-meaning"
+                                class="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 px-2.5 py-1 rounded-lg sm:rounded-xl border border-slate-200 dark:border-slate-700">
+                                Mother
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Navigation Arrows -->
+                    <div
+                        class="flex items-center justify-between w-full mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-100 dark:border-slate-700/50">
+                        <button onclick="app.prevLetter()"
+                            class="btn-duo-gray px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center space-x-1.5 sm:space-x-2">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Prev</span>
+                        </button>
+                        <span id="letter-index-indicator" class="text-[10px] sm:text-xs font-extrabold text-slate-400">1
+                            of 5</span>
+                        <button onclick="app.nextLetter()"
+                            class="btn-duo-gray px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center space-x-1.5 sm:space-x-2">
+                            <span>Next</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive Drawing Area (Right Column) -->
+                <div
+                    class="lg:col-span-8 bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border-2 border-slate-200 dark:border-slate-700 shadow-sm flex flex-col items-center">
+
+                    <div class="w-full flex items-center justify-between mb-3 sm:mb-4">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-hand-sparkles text-duo-green text-sm sm:text-base"></i>
+                            <h2 class="text-sm sm:text-base font-extrabold text-slate-700 dark:text-slate-200">
+                                Practice Canvas
+                            </h2>
+                        </div>
+                        <!-- Canvas Controls Top Right -->
+                        <div class="flex items-center space-x-1.5 sm:space-x-2">
+                            <button onclick="app.showHintModal()"
+                                class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 text-[11px] sm:text-xs font-extrabold hover:bg-amber-100 transition flex items-center space-x-1">
+                                <i class="fa-solid fa-lightbulb"></i>
+                                <span>Hint</span>
+                            </button>
+                            <button onclick="app.clearCanvas()"
+                                class="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[11px] sm:text-xs font-extrabold hover:bg-slate-200 dark:hover:bg-slate-600 transition flex items-center space-x-1">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                <span>Clear</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Container (Responsive Fluid Sizing for Mobile) -->
+                    <div
+                        class="relative w-full h-[320px] sm:h-[420px] max-w-[500px] bg-slate-50 dark:bg-slate-900 rounded-2xl sm:rounded-3xl border-2 sm:border-4 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden shadow-inner group">
+
+                        <!-- Blank Canvas -->
+                        <canvas id="drawing-canvas" class="w-full h-full rounded-2xl z-10"></canvas>
+
+                        <!-- Empty State Drawing Prompt Overlay -->
+                        <div id="canvas-prompt"
+                            class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center text-slate-300 dark:text-slate-700 select-none z-0 transition-opacity duration-300 p-4 text-center">
+                            <i class="fa-solid fa-pen-line text-4xl sm:text-5xl mb-2 animate-pulse"></i>
+                            <p class="text-xs sm:text-sm font-bold">Draw letter freehand</p>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Centralized Reset Button -->
+                    <div class="w-full max-w-[500px] mt-4 sm:mt-6 flex justify-center">
+                        <button onclick="app.clearCanvas()"
+                            class="w-full sm:w-1/2 btn-duo-gray py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-extrabold text-xs sm:text-sm flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span>Reset Canvas</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== LETTER LIBRARY VIEW ==================== -->
+        <section id="view-library" class="hidden space-y-4 sm:space-y-6">
+            <div
+                class="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700">
+                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800 dark:text-white mb-1 sm:mb-2">Malayalam
+                    Script Library</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6">Explore vowels,
+                    consonants, and chillu
+                    letters. Tap any letter to practice.</p>
+
+                <!-- Filter Tabs -->
+                <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
+                    <button onclick="app.filterLibrary('all')"
+                        class="lib-filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-duo-green text-white font-extrabold text-xs sm:text-sm shadow">All
+                        Letters</button>
+                    <button onclick="app.filterLibrary('vowel')"
+                        class="lib-filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-extrabold text-xs sm:text-sm hover:bg-slate-200 transition">Vowels
+                        (15)</button>
+                    <button onclick="app.filterLibrary('consonant')"
+                        class="lib-filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-extrabold text-xs sm:text-sm hover:bg-slate-200 transition">Consonants
+                        (10)</button>
+                    <button onclick="app.filterLibrary('chillu')"
+                        class="lib-filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-extrabold text-xs sm:text-sm hover:bg-slate-200 transition">Chillu
+                        Letters (5)</button>
+                </div>
+
+                <!-- Grid of Letters -->
+                <div id="library-grid"
+                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-4">
+                    <!-- Injected dynamically -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal: Reference / Hint Modal -->
+    <div id="modal-hint"
+        class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200">
+        <div
+            class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl max-w-sm w-full p-5 sm:p-6 text-center border-2 border-slate-200 dark:border-slate-700 shadow-2xl">
+            <h3 class="text-lg sm:text-xl font-extrabold text-slate-800 dark:text-white mb-1.5">Stroke Hint & Reference
+            </h3>
+            <p class="text-xs text-slate-400 font-bold mb-4">Observe how the Malayalam character is structured:</p>
+
+            <div
+                class="w-40 h-40 sm:w-48 sm:h-48 mx-auto bg-slate-100 dark:bg-slate-900 rounded-2xl flex items-center justify-center border border-slate-200 dark:border-slate-700 mb-5 relative">
+                <span id="hint-char-display"
+                    class="font-malayalam text-7xl sm:text-8xl text-duo-blue font-bold">അ</span>
+            </div>
+
+            <button onclick="app.closeHintModal()"
+                class="w-full btn-duo-blue text-white py-3 rounded-xl sm:rounded-2xl font-extrabold text-sm sm:text-base">
+                Got It!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Malayalam Alphabet Dataset
+        const MALAYALAM_CURRICULUM = [
+            // Vowels (സ്വരാക്ഷരങ്ങൾ)
+            { id: 'v1', char: 'അ', roman: 'a', type: 'vowel', word: 'അമ്മ', translit: 'Amma', meaning: 'Mother' },
+            { id: 'v2', char: 'ആ', roman: 'aa', type: 'vowel', word: 'ആന', translit: 'Aana', meaning: 'Elephant' },
+            { id: 'v3', char: 'ഇ', roman: 'i', type: 'vowel', word: 'ഇല', translit: 'Ila', meaning: 'Leaf' },
+            { id: 'v4', char: 'ഈ', roman: 'ee', type: 'vowel', word: 'ഈച്ച', translit: 'Eecha', meaning: 'Fly' },
+            { id: 'v5', char: 'ഉ', roman: 'u', type: 'vowel', word: 'ഉറുമ്പ്', translit: 'Urumbu', meaning: 'Ant' },
+            { id: 'v6', char: 'ഊ', roman: 'oo', type: 'vowel', word: 'ഊഞ്ഞാൽ', translit: 'Oonjal', meaning: 'Swing' },
+            { id: 'v7', char: 'ഋ', roman: 'ru', type: 'vowel', word: 'ഋഷി', translit: 'Rishi', meaning: 'Sage' },
+            { id: 'v8', char: 'എ', roman: 'e', type: 'vowel', word: 'എലി', translit: 'Eli', meaning: 'Rat' },
+            { id: 'v9', char: 'ഏ', roman: 'ae', type: 'vowel', word: 'ഏണി', translit: 'Eani', meaning: 'Ladder' },
+            { id: 'v10', char: 'ഐ', roman: 'ai', type: 'vowel', word: 'ഐസ്', translit: 'Ice', meaning: 'Ice' },
+            { id: 'v11', char: 'ഒ', roman: 'o', type: 'vowel', word: 'ഒട്ടകം', translit: 'Ottakam', meaning: 'Camel' },
+            { id: 'v12', char: 'ഓ', roman: 'oa', type: 'vowel', word: 'ഓടം', translit: 'Odam', meaning: 'Boat' },
+            { id: 'v13', char: 'ഔ', roman: 'au', type: 'vowel', word: 'ഔഷധം', translit: 'Aushadham', meaning: 'Medicine' },
+            { id: 'v14', char: 'അം', roman: 'am', type: 'vowel', word: 'അമ്പലം', translit: 'Ambalam', meaning: 'Temple' },
+            { id: 'v15', char: 'അഃ', roman: 'aha', type: 'vowel', word: 'ദുഃഖം', translit: 'Dukham', meaning: 'Sorrow' },
+
+            // Consonants (വ്യഞ്ജനാക്ഷരങ്ങൾ)
+            { id: 'c1', char: 'ക', roman: 'ka', type: 'consonant', word: 'കണ്ണ്', translit: 'Kannu', meaning: 'Eye' },
+            { id: 'c2', char: 'ഖ', roman: 'kha', type: 'consonant', word: 'ഖരം', translit: 'Kharam', meaning: 'Solid' },
+            { id: 'c3', char: 'ഗ', roman: 'ga', type: 'consonant', word: 'ഗജം', translit: 'Gajam', meaning: 'Elephant' },
+            { id: 'c4', char: 'ഘ', roman: 'gha', type: 'consonant', word: 'ഘടികാരം', translit: 'Ghadikaram', meaning: 'Clock' },
+            { id: 'c5', char: 'ങ', roman: 'nga', type: 'consonant', word: 'മാങ്ങ', translit: 'Maanga', meaning: 'Mango' },
+            { id: 'c6', char: 'ച', roman: 'cha', type: 'consonant', word: 'ചക്രം', translit: 'Chakram', meaning: 'Wheel' },
+            { id: 'c7', char: 'ഛ', roman: 'chha', type: 'consonant', word: 'ഛായ', translit: 'Chhaya', meaning: 'Shadow' },
+            { id: 'c8', char: 'ജ', roman: 'ja', type: 'consonant', word: 'ജലം', translit: 'Jalam', meaning: 'Water' },
+            { id: 'c9', char: 'ഝ', roman: 'jha', type: 'consonant', word: 'ഝഷം', translit: 'Jhasham', meaning: 'Fish' },
+            { id: 'c10', char: 'ഞ', roman: 'nya', type: 'consonant', word: 'ഞണ്ട്', translit: 'Njanndu', meaning: 'Crab' },
+
+            // Chillus (ചില്ലക്ഷരങ്ങൾ)
+            { id: 'ch1', char: 'ൽ', roman: 'l', type: 'chillu', word: 'പാൽ', translit: 'Paal', meaning: 'Milk' },
+            { id: 'ch2', char: 'ൾ', roman: 'L', type: 'chillu', word: 'അവൾ', translit: 'Aval', meaning: 'She' },
+            { id: 'ch3', char: 'ൻ', roman: 'n', type: 'chillu', word: 'അവൻ', translit: 'Avan', meaning: 'He' },
+            { id: 'ch4', char: 'ൺ', roman: 'N', type: 'chillu', word: 'കൺ', translit: 'Kan', meaning: 'Sight' },
+            { id: 'ch5', char: 'ർ', roman: 'rr', type: 'chillu', word: 'നീർ', translit: 'Neer', meaning: 'Water' }
+        ];
+
+        class SoundFX {
+            constructor() {
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+
+            playStroke() {
+                this.init();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(180 + Math.random() * 40, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.015, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.05);
+            }
+
+            playClear() {
+                this.init();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.12);
+                gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.12);
+            }
+        }
+
+        class MalayalamApp {
+            constructor() {
+                this.sound = new SoundFX();
+                this.currentCategory = 'vowels';
+                this.filteredList = [];
+                this.currentIndex = 0;
+
+                // Canvas State
+                this.canvas = null;
+                this.ctx = null;
+                this.isDrawing = false;
+                this.drawnPointsCount = 0;
+            }
+
+            init() {
+                this.canvas = document.getElementById('drawing-canvas');
+                this.ctx = this.canvas.getContext('2d');
+
+                this.setupCanvasEvents();
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+
+                this.filterCategory('vowels');
+                this.renderLibraryGrid();
+            }
+
+            resizeCanvas() {
+                if (!this.canvas) return;
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+
+                this.canvas.width = rect.width * dpr;
+                this.canvas.height = rect.height * dpr;
+                this.canvas.style.width = `${rect.width}px`;
+                this.canvas.style.height = `${rect.height}px`;
+
+                this.ctx.scale(dpr, dpr);
+                this.clearCanvas();
+            }
+
+            setupCanvasEvents() {
+                const getPos = (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    return {
+                        x: clientX - rect.left,
+                        y: clientY - rect.top
+                    };
+                };
+
+                const startDrawing = (e) => {
+                    e.preventDefault();
+                    this.isDrawing = true;
+                    const pos = getPos(e);
+
+                    const isDark = document.documentElement.classList.contains('dark');
+                    this.ctx.strokeStyle = isDark ? '#4ade80' : '#16a34a';
+                    this.ctx.lineWidth = window.innerWidth < 640 ? 12 : 16;
+                    this.ctx.lineCap = 'round';
+                    this.ctx.lineJoin = 'round';
+
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(pos.x, pos.y);
+                    this.drawnPointsCount++;
+
+                    document.getElementById('canvas-prompt').classList.add('opacity-0');
+                    this.sound.playStroke();
+                };
+
+                const draw = (e) => {
+                    if (!this.isDrawing) return;
+                    e.preventDefault();
+                    const pos = getPos(e);
+                    this.ctx.lineTo(pos.x, pos.y);
+                    this.ctx.stroke();
+                    this.drawnPointsCount++;
+
+                    if (this.drawnPointsCount % 8 === 0) {
+                        this.sound.playStroke();
+                    }
+                };
+
+                const stopDrawing = (e) => {
+                    if (this.isDrawing) {
+                        this.isDrawing = false;
+                        this.ctx.closePath();
+                    }
+                };
+
+                this.canvas.addEventListener('pointerdown', startDrawing);
+                this.canvas.addEventListener('pointermove', draw);
+                this.canvas.addEventListener('pointerup', stopDrawing);
+                this.canvas.addEventListener('pointerleave', stopDrawing);
+            }
+
+            clearCanvas() {
+                if (!this.ctx) return;
+                const rect = this.canvas.getBoundingClientRect();
+                this.ctx.clearRect(0, 0, rect.width, rect.height);
+                this.drawnPointsCount = 0;
+                document.getElementById('canvas-prompt').classList.remove('opacity-0');
+                this.sound.playClear();
+            }
+
+            selectCategory(cat) {
+                this.filterCategory(cat);
+            }
+
+            filterCategory(cat) {
+                this.currentCategory = cat;
+                this.filteredList = MALAYALAM_CURRICULUM.filter(item => {
+                    if (cat === 'vowels') return item.type === 'vowel';
+                    if (cat === 'consonants') return item.type === 'consonant';
+                    if (cat === 'chillus') return item.type === 'chillu';
+                    return true;
+                });
+                this.currentIndex = 0;
+                this.renderCurrentCard();
+            }
+
+            getCurrentItem() {
+                return this.filteredList[this.currentIndex] || MALAYALAM_CURRICULUM[0];
+            }
+
+            renderCurrentCard() {
+                const item = this.getCurrentItem();
+                if (!item) return;
+
+                document.getElementById('card-malayalam-char').textContent = item.char;
+                document.getElementById('card-roman-sound').textContent = `"${item.roman}"`;
+                document.getElementById('card-type-badge').textContent = item.type;
+                document.getElementById('card-example-malayalam').textContent = item.word;
+                document.getElementById('card-example-translit').textContent = `(${item.translit})`;
+                document.getElementById('card-example-meaning').textContent = item.meaning;
+
+                document.getElementById('hint-char-display').textContent = item.char;
+
+                // Progress Bar
+                document.getElementById('curriculum-progress-text').textContent = `${this.currentIndex + 1} / ${this.filteredList.length}`;
+                const pct = ((this.currentIndex + 1) / this.filteredList.length) * 100;
+                document.getElementById('curriculum-progress-bar').style.width = `${pct}%`;
+
+                document.getElementById('letter-index-indicator').textContent = `${this.currentIndex + 1} of ${this.filteredList.length}`;
+
+                this.clearCanvas();
+            }
+
+            nextLetter() {
+                if (this.currentIndex < this.filteredList.length - 1) {
+                    this.currentIndex++;
+                } else {
+                    this.currentIndex = 0;
+                }
+                this.renderCurrentCard();
+            }
+
+            prevLetter() {
+                if (this.currentIndex > 0) {
+                    this.currentIndex--;
+                } else {
+                    this.currentIndex = this.filteredList.length - 1;
+                }
+                this.renderCurrentCard();
+            }
+
+            playAudio() {
+                const item = this.getCurrentItem();
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(item.char);
+                    utterance.lang = 'ml-IN';
+                    utterance.rate = 0.8;
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    alert(`Pronunciation sound: "${item.roman}" as in ${item.word}`);
+                }
+            }
+
+            showHintModal() {
+                const modal = document.getElementById('modal-hint');
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
+
+            closeHintModal() {
+                const modal = document.getElementById('modal-hint');
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 200);
+            }
+
+            renderLibraryGrid(typeFilter = 'all') {
+                const grid = document.getElementById('library-grid');
+                grid.innerHTML = '';
+
+                const filtered = MALAYALAM_CURRICULUM.filter(item => {
+                    if (typeFilter === 'all') return true;
+                    return item.type === typeFilter;
+                });
+
+                filtered.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-50 dark:bg-slate-900/80 hover:bg-emerald-50 dark:hover:bg-slate-700/60 border-2 border-slate-200 dark:border-slate-700 hover:border-duo-green rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center cursor-pointer transition transform hover:-translate-y-1 shadow-sm group";
+                    card.onclick = () => {
+                        this.currentCategory = item.type === 'vowel' ? 'vowels' : item.type === 'consonant' ? 'consonants' : 'chillus';
+                        document.getElementById('category-select').value = this.currentCategory;
+                        this.filterCategory(this.currentCategory);
+                        this.currentIndex = this.filteredList.findIndex(i => i.id === item.id);
+                        this.renderCurrentCard();
+                        this.navigateTo('practice');
+                    };
+
+                    card.innerHTML = `
+                        <span class="font-malayalam text-4xl sm:text-5xl font-bold text-slate-800 dark:text-slate-100 group-hover:scale-110 transition mb-1 sm:mb-2">${item.char}</span>
+                        <span class="text-xs sm:text-sm font-extrabold text-duo-blue">"${item.roman}"</span>
+                        <span class="text-[10px] sm:text-xs text-slate-400 font-semibold mt-0.5 sm:mt-1">${item.word}</span>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            filterLibrary(type) {
+                document.querySelectorAll('.lib-filter-btn').forEach(btn => {
+                    btn.className = "lib-filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-extrabold text-xs sm:text-sm hover:bg-slate-200 transition";
+                });
+                event.target.className = "lib-filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-duo-green text-white font-extrabold text-xs sm:text-sm shadow";
+                this.renderLibraryGrid(type);
+            }
+
+            navigateTo(view) {
+                ['practice', 'library'].forEach(v => {
+                    document.getElementById(`view-${v}`).classList.add('hidden');
+                    const tabBtn = document.getElementById(`tab-${v}`);
+                    if (tabBtn) {
+                        tabBtn.className = "py-2.5 sm:py-3 px-3 sm:px-5 border-b-4 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-extrabold text-sm sm:text-base flex items-center space-x-2 transition";
+                    }
+                });
+
+                document.getElementById(`view-${view}`).classList.remove('hidden');
+                const activeTab = document.getElementById(`tab-${view}`);
+                if (activeTab) {
+                    activeTab.className = "py-2.5 sm:py-3 px-3 sm:px-5 border-b-4 border-duo-green text-duo-green font-extrabold text-sm sm:text-base flex items-center space-x-2 transition";
+                }
+
+                if (view === 'practice') {
+                    setTimeout(() => this.resizeCanvas(), 50);
+                }
+            }
+        }
+
+        // Global Initialization
+        let app;
+        window.onload = () => {
+            app = new MalayalamApp();
+            app.init();
+        };
+    </script>
+</body>
+
+</html>
